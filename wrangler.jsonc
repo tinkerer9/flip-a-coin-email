@@ -1,0 +1,9 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "flip-a-coin-email",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-08-25",
+	"observability": { "enabled": true },
+	"compatibility_flags": [ "nodejs_compat" ],
+	"upload_source_maps": true
+}

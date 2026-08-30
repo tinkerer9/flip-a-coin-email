@@ -71,7 +71,7 @@ export default {
 
         reply.addMessage({
             contentType: "text/plain",
-            data: `You flipped a ${answer}.`
+            data: `You flipped ${answer}.`
         });
 
         reply.addMessage({
@@ -79,7 +79,7 @@ export default {
             data: `\
 <div style="font-family: sans-serif; text-align: center;">
 <div style="font-size: 64px;">🪙</div>
-<p><strong>You flipped a:</strong></p>
+<p><strong>You flipped</strong></p>
 <p style="font-size: 24px;">${answer}</p>
 </div>`
         });

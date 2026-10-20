@@ -80,7 +80,7 @@ export default {
 <div style="font-family: sans-serif; text-align: center;">
 <div style="font-size: 64px;">🪙</div>
 <p><strong>You flipped</strong></p>
-<p style="font-size: 24px;">${answer}</p>
+<p style="font-size: 24px;">${answer.toUpperCase()}</p>
 </div>`
         });
 

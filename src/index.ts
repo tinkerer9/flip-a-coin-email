@@ -50,7 +50,7 @@ export default {
 
         reply.setSender({ name: "Flip a Coin", addr: message.to });
         reply.setRecipient(message.from);
-        reply.setSubject(`Re: ${email.subject || "(no subject)"}`);
+        reply.setSubject(`Re: ${(email.subject || "(no subject)").replace(/^(Re:\s*)+/i, "")}`);
         reply.addMessage({
             contentType: "text/plain",
             data: `You flipped ${answer}.`

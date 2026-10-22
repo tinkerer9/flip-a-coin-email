@@ -21,11 +21,6 @@ function normalize(text: string): string {
 
 export default {
     async email(message): Promise<void> {
-        console.log("FROM:", message.from);
-        console.log("TO:", message.to);
-        console.log("MESSAGE-ID:", message.headers.get("Message-ID"));
-        console.log("REFERENCES:", message.headers.get("References"));
-
         const email = await PostalMime.parse(message.raw);
 
         const input = [
@@ -34,12 +29,9 @@ export default {
             normalize(email.text ?? "")
         ].join("\n");
 
-        console.log("SUBJECT:", email.subject ?? "(empty)");
-        console.log("BODY:", email.text?.replace(/\r?\n/g, " ").trim() ?? "(empty)");
-
         const answer = await getAnswer(input);
 
-        console.log("ANSWER:", answer);
+        console.log(`${answer.toUpperCase()}: "${email.subject}": (${message.from})\n"${(email.text ?? "").replace(/\s+/g, " ").trim()}"`);
 
         const reply = createMimeMessage();
 
@@ -49,31 +41,20 @@ export default {
         if (messageId) {
             reply.setHeader("In-Reply-To", messageId);
 
-            const referenceChain = [
-                references,
-                messageId
-            ]
+            const referenceChain = [ references, messageId ]
                 .filter(Boolean)
                 .join(" ");
-
-            console.log("NEW REFERENCES:", referenceChain);
 
             reply.setHeader("References", referenceChain);
         }
 
-        reply.setSender(
-            `Flip a Coin <${message.to}>`
-        );
+        reply.setSender({ name: "Flip a Coin", addr: message.to });
         reply.setRecipient(message.from);
-        reply.setSubject(
-            `Re: ${email.subject || "(no subject)"}`
-        );
-
+        reply.setSubject(`Re: ${email.subject || "(no subject)"}`);
         reply.addMessage({
             contentType: "text/plain",
             data: `You flipped ${answer}.`
         });
-
         reply.addMessage({
             contentType: "text/html",
             data: `\
@@ -84,8 +65,6 @@ export default {
 </div>`
         });
 
-        console.log("SENDING REPLY...");
-
         await message.reply(
             new EmailMessage(
                 message.to,
@@ -93,7 +72,5 @@ export default {
                 reply.asRaw()
             )
         );
-
-        console.log("REPLY SENT");
     }
 } satisfies ExportedHandler;
